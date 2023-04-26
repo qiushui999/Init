@@ -1,1 +1,2 @@
 C:\Users\liu\Desktop\demo\demo\Debug\demo.exe
+F:\code\Init\demo\Debug\demo.exe

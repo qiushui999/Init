@@ -46,6 +46,7 @@ int main()
 				break;
 			case EXIT:
 				printf("已退出\n");
+				dele_contact(&con);
 				break;
 			default:
 				printf("请重新选择>");

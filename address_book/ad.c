@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include"ad.h"
 
-
 void menu()
 {
 	printf("******************************\n");
@@ -11,17 +10,83 @@ void menu()
 	printf("*****      0.exit      *******\n");
 	printf("******************************\n");
 }
+//1.0版本
+//void InitContact(Contact* pc)
+//{
+//	pc->sz = 0;
+//	memset(pc->data, 0, sizeof(pc->data));//初始化数组
+//}
+
+//2.0版本
 void InitContact(Contact* pc)
 {
+	
+	pc->data=(peo_ad *)malloc(Init_num*sizeof(peo_ad));
+	//typedef struct people_ad
+	//{
+	//	char name[MAX_NAME];
+	//	char sex[MAX_SEX];
+	//	int age;
+	//	char tel[MAX_TEL];
+	//	char addr[MAX_ADDR];
+	//}peo_ad;//struct people_ad=peo_ad
+	if (pc->data == NULL)
+	{
+		perror("Initcontact");
+		return;
+	}
+	pc->capacity = Init_num;
 	pc->sz = 0;
-	memset(pc->data, 0, sizeof(pc->data));//初始化数组
 }
+void dele_contact(Contact* pc)
+{
+	free(pc->data);
+	pc->data = NULL;
+	pc->capacity = 0;
+	pc->sz = 0;
+}
+////1.0
+//void add_peo(Contact* pc)
+//{
+//	if (pc->sz == MAX)
+//	{
+//		printf("已满");
+//		return;
+//	}
+//	//增加
+//	printf("请输入名字>");
+//	scanf("%s", pc->data[pc->sz].name);
+//	printf("请输入性别>");
+//	scanf("%s", pc->data[pc->sz].sex);
+//	printf("请输入年龄>");
+//	scanf("%d", &(pc->data[pc->sz].age));
+//	printf("请输入地址>");
+//	scanf("%s", pc->data[pc->sz].addr); 
+//	printf("请输入电话>");
+//	scanf("%s", pc->data[pc->sz].tel);
+//
+//	pc->sz++;
+//
+//	printf("增加成功\n");
+//}
+//2.0
 void add_peo(Contact* pc)
 {
-	if (pc->sz == MAX)
+	//增容
+	if (pc->sz == pc->capacity)
 	{
-		printf("已满");
-		return;
+		peo_ad *ptr=(peo_ad*)realloc(pc->data, (pc->capacity + every_num) * sizeof(peo_ad));
+		if (ptr != NULL)
+		{
+			pc->data = ptr;
+			pc->capacity += every_num; 
+			printf("增容成功\n");
+		}
+		else
+		{
+			perror("add_peo\n");
+			return;
+		}
 	}
 	//增加
 	printf("请输入名字>");
@@ -39,6 +104,9 @@ void add_peo(Contact* pc)
 
 	printf("增加成功\n");
 }
+
+
+
 void Print_ad(const Contact* pc)
 {
 	int i = 0;

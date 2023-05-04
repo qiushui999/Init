@@ -12,7 +12,9 @@ enum option
 	SORT,
 	PRINT
 };
-
+//1.0 初始版本
+//2.0 动态版本
+//3.0 文件保存版本
 int main()
 {
 	int input = 0;
@@ -46,6 +48,7 @@ int main()
 				break;
 			case EXIT:
 				printf("已退出\n");
+				save_contact(&con);//保存到文件中
 				dele_contact(&con);
 				break;
 			default:

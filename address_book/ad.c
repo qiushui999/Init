@@ -3,12 +3,14 @@
 
 void menu()
 {
-	printf("******************************\n");
-	printf("*****1.add     2.del   *******\n");
-	printf("*****3.search  4.modify*******\n");
-	printf("*****5.sort    6.print *******\n");
-	printf("*****      0.exit      *******\n");
-	printf("******************************\n");
+	printf("*****************************************************\n");
+	printf("***************1.add         2.del   ****************\n");
+	printf("***************3.search      4.modify****************\n");
+	printf("***************5.sort        6.print ****************\n");
+	printf("***************        0.exit        ****************\n");
+	printf("*****************************************************\n");
+	printf("\t注意！选择0退出程序才会保存,请勿直接退出     \t\n");
+	printf("*****************************************************\n");
 }
 //1.0版本
 //void InitContact(Contact* pc)
@@ -17,6 +19,49 @@ void menu()
 //	memset(pc->data, 0, sizeof(pc->data));//初始化数组
 //}
 
+
+
+void save_contact(Contact* pc)
+{
+	FILE* pf = fopen("contact.dat","w");
+	if (pf == NULL)
+	{
+		perror("save_contact");
+		return;
+	}
+	//写文件
+	int i = 0;
+	for (i = 0; i < pc->sz; i++)
+	{
+		fwrite(pc->data+i, sizeof(peo_ad), 1, pf);
+	}
+	//关闭文件
+	fclose(pf);
+	pf = NULL;
+
+}
+
+void load(Contact *pc)
+{
+	FILE* pf = fopen("contact.dat", "r");
+	if (pf == NULL)
+	{
+		perror("load");
+		return;
+	}
+
+	//读文件
+	peo_ad tmp = {0};
+	while (fread(&tmp, sizeof(peo_ad), 1, pf))
+	{
+		check_capacity(pc);
+		pc->data[pc->sz] = tmp;
+		pc->sz++;
+	}
+	//关闭文件
+	fclose(pf);
+	pf = NULL;
+}
 //2.0版本
 void InitContact(Contact* pc)
 {
@@ -37,6 +82,8 @@ void InitContact(Contact* pc)
 	}
 	pc->capacity = Init_num;
 	pc->sz = 0;
+	//加载文件
+	load(pc);
 }
 void dele_contact(Contact* pc)
 {
@@ -70,16 +117,15 @@ void dele_contact(Contact* pc)
 //	printf("增加成功\n");
 //}
 //2.0
-void add_peo(Contact* pc)
+void check_capacity(Contact* pc)
 {
-	//增容
 	if (pc->sz == pc->capacity)
 	{
-		peo_ad *ptr=(peo_ad*)realloc(pc->data, (pc->capacity + every_num) * sizeof(peo_ad));
+		peo_ad* ptr = (peo_ad*)realloc(pc->data, (pc->capacity + every_num) * sizeof(peo_ad));
 		if (ptr != NULL)
 		{
 			pc->data = ptr;
-			pc->capacity += every_num; 
+			pc->capacity += every_num;
 			printf("增容成功\n");
 		}
 		else
@@ -88,6 +134,12 @@ void add_peo(Contact* pc)
 			return;
 		}
 	}
+}
+void add_peo(Contact* pc)
+{
+	//增容
+	check_capacity(pc);
+
 	//增加
 	printf("请输入名字>");
 	scanf("%s", pc->data[pc->sz].name);
@@ -150,13 +202,16 @@ void del_peo(Contact* pc)//删除信息
 		printf("查无此人\n");
 	}
 	//删除
-	int j = 0;
-	for (j=pos; j < pc->sz-1;j++)
+	else
 	{
-		pc->data[j] = pc->data[j+1];
+		int j = 0;
+		for (j = pos; j < pc->sz - 1; j++)
+		{
+			pc->data[j] = pc->data[j + 1];
+		}
+		pc->sz--;
+		printf("删除成功\n");
 	}
-	pc->sz--;
-	printf("删除成功\n");
 }
 
 void search_peo(const Contact* pc)

@@ -50,3 +50,8 @@ void del_peo(Contact* pc);//删除信息
 void search_peo(const Contact* pc);//查找信息
 void modify_peo(Contact* pc);//修改信息
 void dele_contact(Contact* pc);//释放内存
+void save_contact(Contact* pc);//保存在内存中
+void load(Contact* pc);//加载内容到通讯录
+void check_capacity(Contact* pc);//加载内容到通讯录
+
+
